@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="shortcut icon" type="image/png" href="pictures/INKIFYicon.png" />
+
+  <title>Contact Us</title>
+</head>
+<body>
+  <style>
+    body{
+      font-family: sans-serif;
+    }
+    h2{
+      text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+    color: #2196F3;
+    }
+    form{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 19px;
+  width: 85%;
+  margin: 2% auto;
+}
+.contactInfo{
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  color: #9E9E9E;
+}
+form input{
+  padding: 10px;
+  width: 90%;
+  border-radius: 8px;
+  margin: 0% 0 0 0;
+  font-size: 20px;
+}
+form input:focus{
+  border-color: rgb(47, 139, 245);
+  outline: none;
+  box-shadow: 0px 0px 5px 1px rgb(47, 139, 245);
+  transition: 0.2s ease-in-out;
+}
+form textarea:focus{
+  border-color: rgb(47, 139, 245);
+  outline: none;
+  box-shadow: 0px 0px 5px 1px rgb(47, 139, 245);
+  transition: 0.2s ease-in-out;
+}
+
+form textarea{
+  width: 90%;
+  height: 150px;
+  resize: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 20px;
+}
+form .sendMessage{
+  padding: 10px 15px;
+    border-radius: 5px;
+    border: transparent;
+    background: #2196F3;
+    color: white;
+    width: 50%;
+    font-size: 20px;
+    transition: 0.5s ease-in-out;
+}
+form .sendMessage:hover{
+  background: #b3b3b3;
+  color: #ffffff;
+  cursor: pointer;
+}
+.button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 20px;
+      font-size: 16px;
+      color: white;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+  </style>
+  <div class="contactUS">
+    <h2>Contact Us for any updates</h2>
+    <div class="contactInfo">
+      <p>E-mail: rashedkandil72@gmail.com</p>
+      <p>Phone: +20 104 431 0426 </p>
+    </div>
+    <form id="contactMe">
+      <input id="name" type="text" name="name" placeholder="Name" required>
+      <input id="email" type="email" name="email" placeholder="Email" required>
+      <textarea id="message" name="message" placeholder="Message" required></textarea>
+      <button class="sendMessage" type="submit">Send Message</button>
+      <a href="index.html" class="button">Back to Home</a>
+    </form>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function () {
+  emailjs.init("q-Ku4cSd8vglp_L5i");
+})();
+document.getElementById("contactMe").addEventListener("submit", function (event){
+  event.preventDefault();
+  let name = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let message = document.getElementById("message").value;
+  let templateParams = {
+      to_name: "Rashed",
+      from_name: name,
+      from_email: email,
+      message: message
+  };
+  // Send message to the email
+  emailjs.send("service_flw0nlm", "template_jhn0ls8", templateParams)
+  .then(function(response) {
+  console.log("success!", response.status, response.text);
+  alert(`your message has been sent successfully!!`);
+  document.getElementById("contactMe").reset();
+  }, function(error) {
+  console.log("failed...", error);
+  alert("Oops! Something went wrong. Please try again.");
+  });
+})
+
+  </script>
+</body>
+</html>

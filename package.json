@@ -1,0 +1,14 @@
+{
+  "name": "linkify1.2",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}

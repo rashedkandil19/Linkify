@@ -1,0 +1,158 @@
+/* small mobile devices (portrait) */
+@media screen and (max-width: 320px) {
+  .shadow{
+    flex-direction: column;
+    width: 90%;
+    align-items: normal
+  }
+  .mb-3{
+    width: 100%;
+  }
+  .lower{
+    width: 85%;
+  }
+  .categories {
+    display: none;
+  }
+  .place-item{
+    width: 220px;
+    height: 265px;
+  }
+
+  input{
+    padding: 10px;
+    background: #ffffff00;
+    border-radius: 15px;
+    font-size: 15px;
+    color: black;
+    border: 2px solid #03A9F4;
+    width: 90%;
+  }
+  #placeType {
+    width: 100%;
+  }
+  input[type="checkbox"]{
+    width: fit-content;
+  }
+  .footer{
+    flex-direction: column;
+    text-align: center;
+  }
+}
+/* mobile devices (portrait) */
+@media screen and (min-width: 321px) and (max-width: 480px) {
+  .shadow{
+    flex-direction: column;
+    width: 90%;
+    align-items: normal
+  }
+  .mb-3{
+    width: 100%;
+  }
+  .lower{
+    width: 85%;
+  }
+  .categories {
+    display: none;
+  }
+  .place-item{
+    width: 220px;
+    height: 300px;
+  }
+  input{
+    padding: 10px;
+    background: #ffffff00;
+    border-radius: 15px;
+    font-size: 15px;
+    color: black;
+    border: 2px solid #03A9F4;
+    width: 90%;
+  }
+  #placeType {
+    width: 97%;
+  }
+  input[type="checkbox"]{
+    width: fit-content;
+  }
+  .footer{
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* mobile devices */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .shadow{
+    flex-direction: column;
+    width: 90%;
+    align-items: normal
+  }
+  .mb-3{
+    width: 100%;
+  }
+  .lower{
+    width: 85%;
+  }
+  .categories {
+    display: none;
+  }
+  .place-item{
+    width: 220px;
+    height: 340px;
+  }
+  input{
+    padding: 10px;
+    background: #ffffff00;
+    border-radius: 15px;
+    font-size: 15px;
+    color: black;
+    border: 2px solid #03A9F4;
+    width: 90%;
+  }
+  #placeType {
+    width: 94%;
+  }
+  input[type="checkbox"]{
+    width: fit-content;
+  }
+}
+/* tablest (portrait) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .shadow{
+    flex-direction: column;
+    width: 90%;
+    align-items: normal;
+  }
+  .mb-3{
+    width: 100%;
+  }
+  .lower{
+    width: 85%;
+  }
+  .categories {
+    display: none;
+  }
+  .place-item{
+    width: 220px;
+    height: 280px;
+  }
+  input{
+    padding: 10px;
+    background: #ffffff00;
+    border-radius: 15px;
+    font-size: 15px;
+    color: black;
+    border: 2px solid #03A9F4;
+    width: 100%;
+  }
+  #placeType {
+    width: 103%;
+  }
+  input[type="checkbox"]{
+    width: fit-content;
+  }
+}
+/* tablest (landscape) */
+@media screen and (min-width: 1025px) and (max-width: 2560px) {
+
+}

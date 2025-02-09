@@ -1,0 +1,9 @@
+# تجاهل مجلد node_modules
+node_modules/
+
+# تجاهل ملف البيئة
+.env
+
+# تجاهل ملفات النظام المؤقتة
+.DS_Store
+Thumbs.db
