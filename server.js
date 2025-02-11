@@ -5,36 +5,28 @@ import cors from 'cors';
 import { decrypt } from './encrypt.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-// إنشاء __dirname لتوافق ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 dotenv.config();
-
 const encryptedApiKey = process.env.ENCRYPTED_GOOGLE_API_KEY;
 
 if (!encryptedApiKey) {
     console.warn("⚠️ Warning: ENCRYPTED_GOOGLE_API_KEY is missing from .env file");
-    process.exit(1); // إيقاف السيرفر إذا لم يكن المفتاح متوفرًا
+    process.exit(1);
 }
-
 let decryptedApiKey;
 try {
     decryptedApiKey = decrypt(encryptedApiKey);
     console.log("🔓 Decrypted API Key loaded successfully.");
 } catch (error) {
     console.error("❌ Error decrypting API key:", error.message);
-    process.exit(1); // إيقاف السيرفر إذا فشل فك التشفير
+    process.exit(1);
 }
-
 const app = express();
 const PORT = process.env.PORT || 5000;
-
 app.use(cors());
 app.use(express.json());
 
-// ✅ API لاسترجاع الأماكن القريبة
 app.get('/api/places', async (req, res) => {
     try {
         const { latitude, longitude, radius = 5000, keyword = '', type = '' } = req.query;
@@ -61,7 +53,6 @@ app.get('/api/places', async (req, res) => {
     }
 });
 
-// ✅ API لاسترجاع تفاصيل المكان
 app.get('/api/placeDetails', async (req, res) => {
     try {
         const { place_id } = req.query;
@@ -88,14 +79,12 @@ app.get('/api/placeDetails', async (req, res) => {
     }
 });
 
-// ✅ تحميل الملفات الثابتة
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ✅ تشغيل السيرفر
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
