@@ -4,7 +4,7 @@
   "main": "server.js",
   "type": "module",
   "dependencies": {
-    "axios": "^0.24.0",
+    "axios": "^1.7.9",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0"
   },
