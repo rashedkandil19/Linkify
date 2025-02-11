@@ -16,7 +16,6 @@ function fetchUserLocationAndPlaces() {
                 fetchNearbyPlaces(latitude, longitude);
             },
             error => {
-                console.error('Error getting user location:', error);
                 alert('We were unable to reach your location. Make sure GPS is turned on.');
                 userLocation = null;
             }
@@ -38,19 +37,18 @@ function fetchNearbyPlaces(latitude, longitude) {
     fetch(`/api/places?latitude=${latitude}&longitude=${longitude}&radius=${radius}&keyword=${keyword}&type=${placeType}`)
         .then(response => response.json())
         .then(data => {
-            console.log("API Response:", data);
             
             if (data.results) {
                 allResults = data.results;
                 displayNextBatch();
             } else {
-                console.error("No results found.");
+                
                 alert("No places found.");
             }
             toggleSkeletonLoader(false);
         })
         .catch(error => {
-            console.error("Error fetching places:", error);
+            
             alert("An error occurred while loading places.");
             toggleSkeletonLoader(false);
         });
