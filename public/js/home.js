@@ -1,9 +1,8 @@
-let allResults = []; 
-let currentIndex = 0; 
-const batchSize = 18; 
-const defaultRadius = 5000; 
-let apiKey = ""; 
-
+let allResults = [];
+let currentIndex = 0;
+const batchSize = 18;
+const defaultRadius = 5000;
+let apiKey = "";
 
 async function fetchApiKey() {
     try {
@@ -12,12 +11,12 @@ async function fetchApiKey() {
         if (!data.apiKey) throw new Error("API Key not found");
         apiKey = data.apiKey;
         await loadGoogleMapsAPI(apiKey);
+        fetchUserLocationAndPlaces(); // جلب الأماكن تلقائيًا بعد تحميل API
     } catch (error) {
         console.error("Error fetching API Key:", error);
         alert("Failed to load API Key.");
     }
 }
-
 
 function loadGoogleMapsAPI(apiKey) {
     return new Promise((resolve, reject) => {
@@ -35,10 +34,9 @@ function loadGoogleMapsAPI(apiKey) {
     });
 }
 
-
 function fetchUserLocationAndPlaces() {
     if (!navigator.geolocation) {
-        alert('Your browser does not support geolocation.');
+        alert("Your browser does not support geolocation.");
         return;
     }
 
@@ -49,23 +47,22 @@ function fetchUserLocationAndPlaces() {
             fetchNearbyPlaces(latitude, longitude);
         },
         (error) => {
-            console.error('Error getting user location:', error);
-            alert('We were unable to get your location. Make sure GPS is turned on.');
+            console.error("Error getting user location:", error);
+            alert("We were unable to get your location. Make sure GPS is turned on.");
         }
     );
 }
-
 
 async function fetchNearbyPlaces(latitude, longitude) {
     try {
         allResults = [];
         currentIndex = 0;
-        document.getElementById('suggestions').innerHTML = '';
-        document.getElementById('see-more-btn').style.display = 'none';
+        document.getElementById("suggestions").innerHTML = "";
+        document.getElementById("see-more-btn").style.display = "none";
 
-        const radius = document.getElementById('radius').value || defaultRadius;
-        const keyword = document.getElementById('keyword').value.trim();
-        const placeType = document.getElementById('placeType').value;
+        const radius = document.getElementById("radius")?.value || defaultRadius;
+        const keyword = document.getElementById("keyword")?.value.trim();
+        const placeType = document.getElementById("placeType")?.value;
 
         if (!keyword && !placeType) {
             alert("Please enter a keyword or select a place type.");
@@ -82,10 +79,8 @@ async function fetchNearbyPlaces(latitude, longitude) {
     }
 }
 
-
 function displayNextBatch() {
-    const container = document.getElementById("suggestions");
-    const service = new google.maps.places.PlacesService(document.createElement('div'));
+    const service = new google.maps.places.PlacesService(document.createElement("div"));
     const batch = allResults.slice(currentIndex, currentIndex + batchSize);
 
     batch.forEach((place) => {
@@ -97,32 +92,30 @@ function displayNextBatch() {
     });
 
     currentIndex += batchSize;
-
-    document.getElementById('see-more-btn').style.display = 
-        currentIndex < allResults.length ? 'block' : 'none';
+    document.getElementById("see-more-btn").style.display =
+        currentIndex < allResults.length ? "block" : "none";
 }
 
-
 function displayPlaceDetails(place) {
-    const container = document.getElementById('suggestions');
-    const placeElement = document.createElement('div');
-    placeElement.classList.add('place-item');
+    const container = document.getElementById("suggestions");
+    const placeElement = document.createElement("div");
+    placeElement.classList.add("place-item");
 
     const mapLink = `https://www.google.com/maps/search/?api=1&query=${place.geometry.location.lat()},${place.geometry.location.lng()}`;
-    const isOpenNow = place.opening_hours && place.opening_hours.isOpen(new Date());
+    const isOpenNow = place.opening_hours?.isOpen(new Date());
 
     placeElement.innerHTML = `
         <h4 class='placeName'>${place.name}</h4>
         <p class='address'>${place.vicinity || "Location unavailable"}</p>
-        ${place.rating ? `<p class="rating">Rating: ${place.rating} ⭐</p>` : ''}
-        ${isOpenNow ? `<p class='openNow'>Open Now</p>` : `<p class="closed">Closed</p>`}
-        ${place.formatted_phone_number ? `<p class='phoneNum'>Phone: ${place.formatted_phone_number}</p>` : ''}
+        ${place.rating ? `<p class="rating">Rating: ${place.rating} ⭐</p>` : ""}
+        ${isOpenNow ? `<p class='openNow'>Open Now ✅</p>` : `<p class="closed">Closed ❌</p>`}
+        ${place.formatted_phone_number ? `<p class='phoneNum'>Phone: ${place.formatted_phone_number}</p>` : ""}
         <div class='links'> <a href="${mapLink}" target="_blank"> Get Location</a> </div>
     `;
     container.appendChild(placeElement);
 }
 
-document.getElementById('search-button').addEventListener('click', () => {
+document.getElementById("search-button").addEventListener("click", () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -131,26 +124,19 @@ document.getElementById('search-button').addEventListener('click', () => {
                 fetchNearbyPlaces(latitude, longitude);
             },
             (error) => {
-                console.error('Error getting user location:', error);
+                console.error("Error getting user location:", error);
                 alert("We couldn't retrieve your location. Please enable location services.");
             }
         );
     } else {
-        alert('Your browser does not support geolocation.');
+        alert("Your browser does not support geolocation.");
     }
 });
 
+document.getElementById("see-more-btn").addEventListener("click", displayNextBatch);
 
-document.getElementById('see-more-btn').addEventListener('click', displayNextBatch);
-
-
-window.onload = async function() {
-    await fetchApiKey(); 
-    fetchUserLocationAndPlaces();
-};
-
-
-window.addEventListener("load", function() {
+window.onload = fetchApiKey;
+window.addEventListener("load", () => {
     document.getElementById("skeleton-loader").style.display = "none";
     document.querySelector("header").classList.remove("hidden");
 });
