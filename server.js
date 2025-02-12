@@ -40,6 +40,13 @@ app.get('/get-api-key', (req, res) => {
 // API لاستدعاء أماكن قريبة باستخدام Google Places API
 app.get('/api/places', async (req, res) => {
     try {
+        if (!process.env.GOOGLE_API_KEY) {
+        return res.status(500).json({ error: 'API Key not found' });
+    }
+    
+    if (!res.headersSent) {
+        res.json({ apiKey: process.env.GOOGLE_API_KEY });
+    }
         const { location, radius, keyword, type } = req.query;
         const apiKey = process.env.GOOGLE_API_KEY;
 
