@@ -1,72 +1,85 @@
 import express from 'express';
-import axios from 'axios';
 import dotenv from 'dotenv';
+import axios from 'axios';
 import cors from 'cors';
+import { decrypt } from './encrypt.js';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 dotenv.config();
 
+const encryptedApiKey = process.env.ENCRYPTED_GOOGLE_API_KEY;
+if (!encryptedApiKey) {
+    console.warn("⚠️ Warning: ENCRYPTED_GOOGLE_API_KEY is missing from .env file");
+}
+
+let decryptedApiKey = null;
+try {
+    decryptedApiKey = decrypt(encryptedApiKey);
+    console.log("🔓 Decrypted API Key loaded successfully.");
+} catch (error) {
+    console.error("❌ Error decrypting API key:", error.message);
+    decryptedApiKey = null;
+}
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
-// تحديد المسار الصحيح عند استخدام ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+app.use(cors());
+app.use(express.json());
 
-// إعداد CORS للسماح فقط بالنطاقات المحددة (أضف نطاق موقعك هنا)
-const allowedOrigins = ['http://localhost:3000', 'https://yourdomain.com'];
-app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    }
-}));
-
-// تشغيل الملفات الثابتة (Frontend)
-app.use(express.static(path.join(__dirname, 'public')));
-
-// API لاسترجاع مفتاح Google API من بيئة التشغيل
-app.get('/get-api-key', (req, res) => {
-    if (!process.env.GOOGLE_API_KEY) {
-        return res.status(500).json({ error: 'API Key not found' });
-    }
-    res.json({ apiKey: process.env.GOOGLE_API_KEY });
-});
-
-// API لاستدعاء أماكن قريبة باستخدام Google Places API
 app.get('/api/places', async (req, res) => {
     try {
-        if (!process.env.GOOGLE_API_KEY) {
-        return res.status(500).json({ error: 'API Key not found' });
-    }
-    
-    if (!res.headersSent) {
-        res.json({ apiKey: process.env.GOOGLE_API_KEY });
-    }
-        const { location, radius, keyword, type } = req.query;
-        const apiKey = process.env.GOOGLE_API_KEY;
+        const { latitude, longitude, radius = 5000, keyword = '', type = '' } = req.query;
 
-        if (!location || !radius) {
-            return res.status(400).json({ error: "Missing required parameters" });
+        if (!latitude || !longitude || isNaN(latitude) || isNaN(longitude)) {
+            return res.status(400).json({ error: 'Invalid Latitude or Longitude' });
         }
 
-        const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&keyword=${keyword || ''}&type=${type || ''}&key=${apiKey}`;
-        const response = await axios.get(url);
+        console.log(`Requesting Google Places API with lat: ${latitude}, lon: ${longitude}`);
 
-        if (response.data.status !== "OK" && response.data.status !== "ZERO_RESULTS") {
-            throw new Error(response.data.error_message || "Failed to fetch places");
+        const API_URL = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&keyword=${encodeURIComponent(keyword)}&type=${encodeURIComponent(type)}&key=${decryptedApiKey}`;
+
+        const response = await axios.get(API_URL, { timeout: 5000 });
+
+        if (response.data.status !== "OK") {
+            console.error("Error from Google API:", response.data.error_message);
+            return res.status(500).json({ error: response.data.error_message });
         }
 
         res.json(response.data);
     } catch (error) {
-        console.error('Error fetching places:', error.message);
-        res.status(500).json({ error: "An error occurred while fetching places" });
+        console.error('❌ Error fetching places:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-// تشغيل السيرفر
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.get('/api/placeDetails', async (req, res) => {
+    try {
+        const { place_id } = req.query;
+
+        if (!place_id) {
+            return res.status(400).json({ error: 'place_id is required' });
+        }
+
+        const API_URL = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${decryptedApiKey}`;
+
+        console.log("Requesting place details...");
+
+        const response = await axios.get(API_URL, { timeout: 5000 });
+        if (response.data.status !== "OK") {
+            console.error("Error from Google API:", response.data.error_message);
+            return res.status(500).json({ error: response.data.error_message });
+        }
+        res.json(response.data);
+    } catch (error) {
+        console.error('❌ Error fetching place details:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+app.use(express.static(path.join(__dirname, 'public')));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+app.listen(PORT, () => {
+    console.log(`✅ Server is running on http://localhost:${PORT}`);
+});
