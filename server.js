@@ -14,14 +14,26 @@ const PORT = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// تفعيل CORS للسماح للفرونت إند بالتواصل مع السيرفر
-app.use(cors());
+// إعداد CORS للسماح فقط بالنطاقات المحددة (أضف نطاق موقعك هنا)
+const allowedOrigins = ['http://localhost:3000', 'https://yourdomain.com'];
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}));
 
 // تشغيل الملفات الثابتة (Frontend)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // API لاسترجاع مفتاح Google API من بيئة التشغيل
 app.get('/get-api-key', (req, res) => {
+    if (!process.env.GOOGLE_API_KEY) {
+        return res.status(500).json({ error: 'API Key not found' });
+    }
     res.json({ apiKey: process.env.GOOGLE_API_KEY });
 });
 
@@ -31,14 +43,21 @@ app.get('/api/places', async (req, res) => {
         const { location, radius, keyword, type } = req.query;
         const apiKey = process.env.GOOGLE_API_KEY;
 
-        // بناء رابط طلب البيانات من Google Places API
-        const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&keyword=${keyword}&type=${type}&key=${apiKey}`;
+        if (!location || !radius) {
+            return res.status(400).json({ error: "Missing required parameters" });
+        }
 
+        const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=${radius}&keyword=${keyword || ''}&type=${type || ''}&key=${apiKey}`;
         const response = await axios.get(url);
+
+        if (response.data.status !== "OK" && response.data.status !== "ZERO_RESULTS") {
+            throw new Error(response.data.error_message || "Failed to fetch places");
+        }
+
         res.json(response.data);
     } catch (error) {
-        console.error('Error fetching places:', error);
-        res.status(500).json({ error: "Error fetching places" });
+        console.error('Error fetching places:', error.message);
+        res.status(500).json({ error: "An error occurred while fetching places" });
     }
 });
 
