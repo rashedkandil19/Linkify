@@ -11,7 +11,7 @@ async function fetchApiKey() {
         if (!data.apiKey) throw new Error("API Key not found");
         apiKey = data.apiKey;
         await loadGoogleMapsAPI(apiKey);
-        fetchUserLocationAndPlaces(); // جلب الأماكن تلقائيًا بعد تحميل API
+        fetchUserLocationAndPlaces(); 
     } catch (error) {
         console.error("Error fetching API Key:", error);
         alert("Failed to load API Key.");
