@@ -3,69 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="keywords" content="location finder, place locator, nearby places, search locations, map search, local services, Linkify">
-  <meta name="description" content="Find any place effortlessly with Linkify! Discover restaurants, hospitals, shops, and more near you with ease.">
-  
-  <title>Linkify | Home</title>
-
-  <!-- Stylesheets -->
+  <meta name="keywords" content="location finder, place locator, find places near me, search locations, nearby services, local businesses, Linkify, map search, location search, service finder">
+  <meta name="description" content="Find any place effortlessly with Linkify! Just type the service you need and the location, and get instant results. Discover restaurants, hospitals, shops, and more near you with ease. Start exploring now!">
+  <!-- home css -->
   <link rel="stylesheet" href="style/home.css">
+  <!-- responsive css -->
   <link rel="stylesheet" href="style/responsive.css">
-
-  <!-- Google Fonts -->
+  <!-- google fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Open+Sans:wght@300..800&display=swap" rel="stylesheet">
-
-  <!-- Favicon -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+  <!-- favicon -->
   <link rel="shortcut icon" type="image/png" href="pictures/INKIFYicon.png" />
-
-  <!-- Font Awesome -->
+  <!-- font awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <title>Linkify | Home</title>
 </head>
 <body>
-  <!-- Skeleton Loader -->
   <div id="skeleton-loader" class="skeleton-loader">
     <div class="skeleton-box" style="width: 60%; height: 30px;"></div>
     <div class="skeleton-box" style="width: 80%;"></div>
     <div class="skeleton-box" style="width: 70%;"></div>
     <div class="skeleton-box" style="width: 90%;"></div>
   </div>
-
-  <!-- Header -->
+  <!-- header -->
   <header class="hidden">
     <div class="upper">
       <div class="logo">
-        <a href="index.html">
-          <img src="pictures/LinkifyLogo1.png" width="120" height="110" alt="Linkify Logo">
-        </a>
-      </div>
-      <div class="profile">
-        <i class="fa-solid fa-bars"></i>
-        <div class="contain">
-          <i class="fa-solid fa-caret-up"></i>
-          <ul class="headerMenu">
-            <li><a href="contactUs.html">Contact Us</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="privacy.html">Privacy & Policy</a></li>
-          </ul>
+        <a href="index.html"><img src="pictures/LinkifyLogo1.png" width="120px" height="110px" alt="" srcset=""></a>
+        <div class="profile">
+          <i class="fa-solid fa-bars"></i>
+          <div class="contain">
+            <i class="fa-solid fa-caret-up" style="position: absolute;right: 23px;top: 5px;color: #eee;"></i>
+            <ul class="headerMenu">
+              <li><a href="contantUs.html">Contact us</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="privacy.html">privacy & policy</a></li>
+            </ul>
+          </div>
+          <div class="profileIcon">U</div>
         </div>
-        <div class="profileIcon">U</div>
       </div>
     </div>
-
-    <!-- Search Box -->
+    <!-- search inputs field -->
     <div class="lower">
       <div class="card p-4 shadow">
-        <div class="mb-3">
+        <div style="display: none;" class="mb-3">
           <input type="text" id="location" name="location" class="form-control" placeholder="Enter location">
         </div>
-        <div class="mb-3">
+        <div style="display: none;" class="mb-3">
           <input type="number" id="radius" name="radius" class="form-control" placeholder="Enter radius (in meters)">
         </div>
-      <div class="card p-4 shadow">
         <div class="mb-3">
-          <input type="text" id="keyword" class="form-control" placeholder="Enter keyword" aria-label="Search for places">
+          <input type="text" id="keyword" class="form-control" placeholder="Enter keyword">
         </div>
         <div class="mb-3">
           <select id="placeType" class="form-control">
@@ -79,38 +71,56 @@
             <option value="park">Parks</option>
           </select>
         </div>
+        <div style="display: none;" class="mb-3">
+          <input type="number" id="minRating" class="form-control" placeholder="Minimum Rating (1-5)" min="1" max="5">
+        </div>
+        <div style="display: none;" class="mb-3">
+          <label>
+            <input type="checkbox" id="openNow">
+            Open Now Only
+          </label>
+        </div>
         <button class="btn btn-primary w-100" id="search-button">Search</button>
       </div>
     </div>
   </header>
-
-  <!-- Categories -->
-  <section class="categories">
-    <div class="categorie-icon" onclick="searchByType('restaurant')" aria-label="Find Restaurants">
-      <a href="#"><i class="fa-solid fa-utensils"></i><p>Restaurant</p></a>
+  <!-- categories -->
+  <div class="categories">
+    <div class="categorie-icon" onclick="searchByType('restaurant')">
+      <a href="#"><i class="fa-solid fa-utensils"></i>
+        <p>Restaurant</p>
+      </a>
     </div>
-    <div class="categorie-icon" onclick="searchByType('company')" aria-label="Find Companies">
-      <a href="#"><i class="fa-regular fa-building"></i><p>Company</p></a>
+    <div class="categorie-icon" onclick="searchByType('company')">
+      <a href="#"><i class="fa-regular fa-building"></i>
+        <p>Company</p>
+      </a>
     </div>
-    <div class="categorie-icon" onclick="searchByType('cinema')" aria-label="Find Cinemas">
-      <a href="#"><i class="fa-solid fa-film"></i><p>Cinema</p></a>
+    <div class="categorie-icon" onclick="searchByType('cinema')">
+      <a href="#"><i class="fa-solid fa-film"></i>
+        <p>Cinema</p>
+      </a>
     </div>
-    <div class="categorie-icon" onclick="searchByType('hospital')" aria-label="Find Hospitals">
-      <a href="#"><i class="fa-regular fa-hospital"></i><p>Hospital</p></a>
+    <div class="categorie-icon" onclick="searchByType('hospital')">
+      <a href="#"><i class="fa-regular fa-hospital"></i>
+        <p>Hospital</p>
+      </a>
     </div>
-    <div class="categorie-icon" onclick="searchByType('hotel')" aria-label="Find Hotels">
-      <a href="#"><i class="fa-solid fa-hotel"></i><p>Hotel</p></a>
+    <div class="categorie-icon" onclick="searchByType('hotel')">
+      <a href="#"><i class="fa-solid fa-hotel"></i>
+        <p>Hotel</p>
+      </a>
     </div>
-    <div class="categorie-icon" onclick="searchByType('airport')" aria-label="Find Airports">
-      <a href="#"><i class="fa-solid fa-plane-departure"></i><p>Airport</p></a>
+    <div class="categorie-icon" onclick="searchByType('airport')">
+      <a href="#">
+        <i class="fa-solid fa-plane-departure"></i>
+        <p>Airport</p>
+      </a>
     </div>
-  </section>
-
-  <!-- Search Results -->
-  <section class="containerResults">
+  </div>
+  <!-- suggestions -->
+  <div class="containerResults">
     <div id="suggestions"></div>
-
-    <!-- Skeleton Loader for Results -->
     <div id="skeleton-loader" class="skeleton-container">
       <div class="skeleton-item">
         <div class="skeleton-avatar"></div>
@@ -137,23 +147,19 @@
         </div>
       </div>
     </div>
-
     <button id="see-more-btn" style="display: none;">See More</button>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
+  </div>
+  <!-- footer -->
+  <div class="footer">
     <div class="logo">
-      <a href="index.html">
-        <img src="pictures/linkify-logo-footer.png" width="120" height="110" alt="Linkify Logo">
-      </a>
+      <a href="index.html" ><img src="pictures/linkify-logo-footer.png" width="120px" height="110px" alt="" srcset=""></a>
     </div>
     <div class="linksAndPara">
-      <p>&copy; Linkify 2025. All rights reserved.</p>
+      <div>
+        <p> &copy; Linkify 2025. All rights reserved.</p>
+      </div>
     </div>
-  </footer>
-
-  <!-- JavaScript -->
+  </div>
   <script src="js/home.js"></script>
 </body>
 </html>
