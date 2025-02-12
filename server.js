@@ -4,6 +4,7 @@ import axios from 'axios';
 import cors from 'cors';
 import { decrypt } from './encrypt.js';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -23,6 +24,10 @@ try {
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Get the current directory path using import.meta.url
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(cors());
 app.use(express.json());
@@ -76,10 +81,14 @@ app.get('/api/placeDetails', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
 app.listen(PORT, () => {
     console.log(`✅ Server is running on http://localhost:${PORT}`);
 });
