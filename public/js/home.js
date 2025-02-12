@@ -1,10 +1,10 @@
-let allResults = []; // لتخزين النتائج
-let currentIndex = 0; // تتبع النتائج المحملة
-const batchSize = 18; // عدد النتائج في كل دفعة
-const defaultRadius = 5000; // القيمة الافتراضية لنصف القطر
-let apiKey = ""; // سيتم جلب المفتاح لاحقًا
+let allResults = []; 
+let currentIndex = 0; 
+const batchSize = 18; 
+const defaultRadius = 5000; 
+let apiKey = ""; 
 
-// تحميل مفتاح API من السيرفر
+
 async function fetchApiKey() {
     try {
         const response = await fetch("/get-api-key");
@@ -18,7 +18,7 @@ async function fetchApiKey() {
     }
 }
 
-// تحميل Google Maps API
+
 function loadGoogleMapsAPI(apiKey) {
     return new Promise((resolve, reject) => {
         if (typeof google !== "undefined") {
@@ -35,7 +35,7 @@ function loadGoogleMapsAPI(apiKey) {
     });
 }
 
-// جلب الموقع والبحث عن الأماكن القريبة
+
 function fetchUserLocationAndPlaces() {
     if (!navigator.geolocation) {
         alert('Your browser does not support geolocation.');
@@ -55,7 +55,7 @@ function fetchUserLocationAndPlaces() {
     );
 }
 
-// البحث عن الأماكن القريبة
+
 async function fetchNearbyPlaces(latitude, longitude) {
     try {
         allResults = [];
@@ -82,7 +82,7 @@ async function fetchNearbyPlaces(latitude, longitude) {
     }
 }
 
-// عرض النتائج
+
 function displayNextBatch() {
     const container = document.getElementById("suggestions");
     const service = new google.maps.places.PlacesService(document.createElement('div'));
@@ -98,12 +98,11 @@ function displayNextBatch() {
 
     currentIndex += batchSize;
 
-    // إظهار زر "عرض المزيد" إذا كان هناك نتائج متبقية
     document.getElementById('see-more-btn').style.display = 
         currentIndex < allResults.length ? 'block' : 'none';
 }
 
-// عرض تفاصيل المكان
+
 function displayPlaceDetails(place) {
     const container = document.getElementById('suggestions');
     const placeElement = document.createElement('div');
@@ -123,7 +122,6 @@ function displayPlaceDetails(place) {
     container.appendChild(placeElement);
 }
 
-// تشغيل البحث عند الضغط على زر البحث
 document.getElementById('search-button').addEventListener('click', () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -142,39 +140,17 @@ document.getElementById('search-button').addEventListener('click', () => {
     }
 });
 
-// تحميل المزيد من النتائج
+
 document.getElementById('see-more-btn').addEventListener('click', displayNextBatch);
 
-// تحميل الصفحة
+
 window.onload = async function() {
-    await fetchApiKey(); // تحميل مفتاح API أولًا
+    await fetchApiKey(); 
     fetchUserLocationAndPlaces();
 };
 
-// إخفاء اللودر بعد تحميل الصفحة
+
 window.addEventListener("load", function() {
     document.getElementById("skeleton-loader").style.display = "none";
     document.querySelector("header").classList.remove("hidden");
-});
-
-// البحث حسب النوع
-function searchByType(placeType) {
-    let location = document.querySelector("input[name='location']").value;
-    let radius = document.querySelector("input[name='radius']").value || 5000; // 5KM افتراضي
-    if (!location) {
-        alert("Please enter a location.");
-        return;
-    }
-    document.querySelector("select[name='placeType']").value = placeType;
-    document.getElementById("search-button").click();
-}
-
-// إظهار القائمة الجانبية
-document.querySelector(".fa-bars").addEventListener("click", function() {
-    document.querySelector(".contain").classList.toggle("show");
-});
-
-// تنبيه عند الضغط على أيقونة الملف الشخصي
-document.querySelector(".profileIcon").addEventListener("click", function () {
-    alert("Not Available Yet!!");
 });
