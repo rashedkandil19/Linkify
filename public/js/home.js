@@ -16,7 +16,6 @@ function fetchUserLocationAndPlaces() {
                 fetchNearbyPlaces(latitude, longitude);
             },
             error => {
-                console.error('Error getting user location:', error);
                 alert('We were unable to reach your location. Make sure GPS is turned on.');
                 userLocation = null;
             }
@@ -37,9 +36,7 @@ function fetchNearbyPlaces(latitude, longitude) {
     const placeType = document.getElementById('placeType').value || '';
     fetch(`/api/places?latitude=${latitude}&longitude=${longitude}&radius=${radius}&keyword=${keyword}&type=${placeType}`)
         .then(response => response.json())
-        .then(data => {
-            console.log("API Response:", data);
-            
+        .then(data => {            
             if (data.results) {
                 allResults = data.results;
                 displayNextBatch();
